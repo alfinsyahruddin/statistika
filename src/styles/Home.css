@@ -1,0 +1,12 @@
+.text-line {
+   width: 100%; 
+   text-align: center; 
+   border-bottom: 1px solid #ddd; 
+   line-height: 0.1em;
+   margin: 10px 0 30px;
+} 
+
+.text-line span { 
+    background:#fafafa; 
+    padding:0 10px; 
+}

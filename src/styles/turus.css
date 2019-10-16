@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'TallyMark';
+  src: local('TallyMark'), url(../assets/fonts/tally-mark.ttf) format('truetype');
+}
+
+.turus_format {
+    font-family: 'TallyMark';
+    font-size: 20px !important;
+}
