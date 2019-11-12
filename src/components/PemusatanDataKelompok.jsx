@@ -2,13 +2,13 @@ import React, {useState, useContext} from 'react';
 import '../styles/DistribusiFrekuensi.css';
 import {withRouter} from 'react-router-dom'
 import { FaPlus, FaTimes, FaArrowLeft } from 'react-icons/fa';
-import DiagramContext from '../contexts/DiagramContext';
+import PDContext from '../contexts/PDContext';
 
-const DiagramGenerator = ({history}) => {
-	const DiagramConsumer = useContext(DiagramContext);
-	const DiagramData = DiagramConsumer.state.Diagram.data;
-	const [fields, setFields] = useState(DiagramData.length === 0 ? [{ label: '', nilai: '' }] : DiagramData);
-
+const PemusatanDataKelompok = ({history}) => {
+	const PDConsumer = useContext(PDContext);
+	const PDData = PDConsumer.state.PD.data;
+	const [fields, setFields] = useState(PDData.length === 0 ? [{ label: '', frekuensi: '' }] : PDData);
+	console.log('PDData', PDData)
 	const handleChangeLabel = (i, event) => {
 		const labels = [...fields];
 		labels[i].label = event.target.value;
@@ -16,13 +16,13 @@ const DiagramGenerator = ({history}) => {
 	}
 	const handleChangeNilai = (i, event) => {
 		const _fields = [...fields];
-		_fields[i].nilai = event.target.value;
+		_fields[i].frekuensi = event.target.value;
 		setFields(_fields);
 	}
 
 	const handleAdd = () => {
 		const _fields = [...fields];
-		_fields.push({ label: null, nilai: null });
+		_fields.push({ label: null, frekuensi: null });
 		setFields(_fields);
 	}
 
@@ -32,6 +32,7 @@ const DiagramGenerator = ({history}) => {
 		setFields(_fields);
 	}
 	const handleSubmit = () => {
+		console.log('fields', fields)
 		const regex = new RegExp(/(^\d+)-(\d+$)/)
 		let isDF = [];
 		fields.forEach((v, k) => {
@@ -41,37 +42,16 @@ const DiagramGenerator = ({history}) => {
 				isDF.push(false)
 			}
 		})
-		if (!isDF.includes(false)) {
-			const newFields = fields.map(f => {
-				return {
-					label: f.label,
-					nilai: f.nilai,
-					from: f.label.split('-')[0],
-					to: f.label.split('-')[1]
-				}
-			})
-		    DiagramConsumer.dispatch({
-		      type: 'UPDATE_DIAGRAM',
-		      payload: {
-		        data: newFields
-		      }
-		    })
-
-		    history.push({
-		    	pathname: '/diagram_generator/chart_2'
-		    })
-
+		if (isDF.includes(false)) {
+			alert('Format kelas interval tidak valid, contoh: 51-60')
 		} else {
-		    DiagramConsumer.dispatch({
-		      type: 'UPDATE_DIAGRAM',
-		      payload: {
-		        data: fields
-		      }
-		    })
-
-		    history.push({
-		    	pathname: '/diagram_generator/chart'
-		    })
+		   	console.log('udah bener')
+		   	PDConsumer.dispatch({type: 'UPDATE_PD', payload: {
+		   		data: fields
+		   	}})
+		   	history.push({
+		   		pathname: '/pemusatan_data/kelompok/result'
+		   	})
 		}
 
 	}
@@ -80,9 +60,9 @@ const DiagramGenerator = ({history}) => {
 			<h1 className="text-xl text-green-600 mb-2">
 			<button className="focus:outline-none" onClick={() => {
 				history.push({
-					pathname: '/'
+					pathname: '/pemusatan_data'
 				})
-			}}><FaArrowLeft color="#48bb78" style={{display: 'inline-block', marginRight: 4}} /></button> Membuat Diagram</h1>
+			}}><FaArrowLeft color="#48bb78" style={{display: 'inline-block', marginRight: 4}} /></button> Pemusatan Data - Kelompok</h1>
 			<hr/>
 			{fields.map((field, idx) => {
 				return (
@@ -95,17 +75,17 @@ const DiagramGenerator = ({history}) => {
 					      value={field.label !== null ? field.label : ''}
 					      className="w-8/12 p-2 bg-gray-100 rounded-lg focus:outline-none mr-2"
 					      type="text"
-					      placeholder="Label"
+					      placeholder="Misal : 51-60"
 					      label={field.label || ""}
 					      onChange={e => handleChangeLabel(idx, e)}
 					      autoFocus={true}
 					    />
 					    <input
-					      value={field.nilai !== null ? field.nilai : ''}
+					      value={field.frekuensi !== null ? field.frekuensi : ''}
 					      className="w-3/12 p-2 bg-gray-100 rounded-lg focus:outline-none"
 					      type="number"
 					      placeholder="F"
-					      label={field.nilai || ""}
+					      label={field.frekuensi || ""}
 					      onChange={e => handleChangeNilai(idx, e)}
 					    />
 					  </div>
@@ -117,7 +97,7 @@ const DiagramGenerator = ({history}) => {
 					<FaPlus color="#26a267" style={{display: 'inline-block'}} size={16} />
 				</button>
 
-				<button onClick={handleSubmit} className="flex-1 ml-4 w-full shadow-md hover:shadow-lg focus:outline-none bg-green-500 text-white rounded-lg text-center py-2 font-bold">BUAT DIAGRAM</button>
+				<button onClick={handleSubmit} className="flex-1 ml-4 w-full shadow-md hover:shadow-lg focus:outline-none bg-green-500 text-white rounded-lg text-center py-2 font-bold">HITUNG</button>
 			</div>
 
         </>
@@ -125,4 +105,4 @@ const DiagramGenerator = ({history}) => {
 }
 
 
-export default withRouter(DiagramGenerator)
+export default withRouter(PemusatanDataKelompok)

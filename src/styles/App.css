@@ -19,3 +19,7 @@ code {
 .right-n-2 {
 	right: -12px;
 }
+
+button:focus, button:active {
+  outline-style: none;
+}

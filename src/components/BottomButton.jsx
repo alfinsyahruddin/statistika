@@ -2,13 +2,18 @@ import React from 'react';
 import {withRouter} from 'react-router-dom'
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
-const BottomButton = ({history, titleLeft, titleRight, pathLeft, rightFunc, btnLeft, btnRight}) => {
+const BottomButton = ({history, titleLeft, titleRight, pathLeft, leftFunc, rightFunc, btnLeft, btnRight}) => {
 	return (
             <div className="mt-4 flex flex-row justify-between">
                 <button className="text-green-500 bg-white shadow-md rounded-full font-lg py-2 px-4 focus:outline-none hover:shadow-lg" onClick={() => {
-                    history.push({
-                        pathname: pathLeft,
-                    })
+                   console.log(leftFunc)
+                    if (leftFunc !== undefined) {
+                        leftFunc()
+                    } else {
+                        history.push({
+                            pathname: pathLeft,
+                        })
+                    }
                 }} style={{
                     visibility: btnLeft !== false ? 'visible' : 'hidden'
                 }}>
